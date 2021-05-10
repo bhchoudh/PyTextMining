@@ -1,21 +1,12 @@
-import nltk, os, os.path
+import os, os.path
 import pandas as pd
 from clsBhasTextMine import clsBhasTextMine
-from nltk.stem import PorterStemmer
-from nltk.stem import LancasterStemmer
-from textblob import TextBlob
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from docx import Document
-from openpyxl import load_workbook
 
-excelpath = "d:\BhaskarCode\FILES\TextMining21\myNaiveBayes0521.xlsx"
+excelpath = "d:\BhaskarCode\FILES\TextMining21\myNaiveBayes05211.xlsx"
 filepath = "d:\BhaskarCode\FILES\TextMining21\dataNBtrain"
-#nltk.download('averaged_perceptron_tagger')
 
-def myModelClassify(filepath,excelpath):      #only to create a excel of classification model by reading DocX
+#Read multiple doc file in loop & create excel entry for each doc content & sample labelling for training data
+def myModelClassify(filepath,excelpath):
     os.path.normpath(filepath)  # Neutralize OS effect of path
     os.path.normpath(excelpath)
     newdatalist = []
@@ -38,7 +29,7 @@ def myModelClassify(filepath,excelpath):      #only to create a excel of classif
     # print(*newdatalist, sep = "\n")
     dfClassifier = pd.DataFrame(newdatalist, columns=['Text', 'Label'])
     dfwrite = pd.ExcelWriter(excelpath)
-    dfClassifier.to_excel(dfwrite, sheet_name='RefData', index=True)
+    dfClassifier.to_excel(dfwrite, sheet_name='RefData21', index=True)
     dfwrite.save()
     return newdatalist
 

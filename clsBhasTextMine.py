@@ -1,14 +1,5 @@
 import nltk, os, os.path
-import pandas as pd
-from nltk.stem import PorterStemmer
-from nltk.stem import LancasterStemmer
-from textblob import TextBlob
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 from docx import Document
-from openpyxl import load_workbook
 
 class clsBhasTextMine:
 

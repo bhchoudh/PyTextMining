@@ -105,7 +105,6 @@ dfwrite.save()
 quit()
 
 
-
 ##################### Alternate algorithm, not used in this case
 TestList = []
 def myTestDataPrep(data):
@@ -133,32 +132,3 @@ model = MultinomialNB().fit(X_train, y_train)
 predicted = model.predict(X_test)
 print(accuracy_score(y_test, predicted))
 #############################
-
-############ Shifted in PyDataSimulate file, only to create first simulated vector & label it.
-quit()
-def myModelClassify(filepath,excelpath):      #only to create a excel of classification model by reading DocX
-    os.path.normpath(filepath)  # Neutralize OS effect of path
-    os.path.normpath(excelpath)
-    newdatalist = []
-    for file in os.listdir(filepath):  # loop through all files in the folder
-        fullfilepath = os.path.join(filepath, file)
-        if os.path.isfile(fullfilepath):
-            data = myReadDocx(fullfilepath)
-            data = myTextPreProcessor(data)
-            data = ' '.join(data)  # converting list back to string to add to a master list
-            if (len(file) % 2) == 0:
-                label = 'High'
-            else:
-                label = 'Low'
-            newdata = [data, label]
-            newdatalist.append(newdata)
-        else:
-            continue
-
-    # print(*newdatalist, sep = "\n")
-    dfClassifier = pd.DataFrame(newdatalist, columns=['Text', 'Label'])
-    dfwrite = pd.ExcelWriter(excelpath)
-    dfClassifier.to_excel(dfwrite, sheet_name='RefData', index=True)
-    dfwrite.save()
-    return newdatalist
-##################################
