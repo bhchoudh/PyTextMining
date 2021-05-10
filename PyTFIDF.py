@@ -8,6 +8,30 @@ from docx import Document
 #nltk.download('stopwords')                          #download NLTK packages
 
 def myTextPreProcessor(text):
+    #stopWords = set(nltk.corpus.stopwords.words('english'))
+    stopWords = nltk.corpus.stopwords.words('english')
+    tokenizer = nltk.tokenize.RegexpTokenizer(r'\w+')  # Get tokenizer with builtin cleaning
+    text = tokenizer.tokenize(text)
+    for word in text:
+        if word in stopWords:
+            text.remove(word)  # remove stopwords
+        elif not word.isalpha():
+            text.remove(word)  # remove special characters
+        elif word.isnumeric():
+            text.remove(word)
+    #print(text)
+    for word, pos in nltk.pos_tag(text):
+        if (pos == 'NNP' or pos == 'NNPS' or pos == 'PRP' or pos == 'CD'):
+            text.remove(word)
+    #print(text)
+    # texttoken=[]
+    # porter = PorterStemmer()
+    # lancaster = LancasterStemmer()
+    # for word in text:
+    #    texttoken.append(lancaster.stem(word))
+
+    return text
+
     stopWords = set(nltk.corpus.stopwords.words('english'))
     tokenizer = nltk.tokenize.RegexpTokenizer(r'\w+')  # Get tokenizer with builtin cleaning
     text = tokenizer.tokenize(text)
@@ -22,6 +46,7 @@ def myTextPreProcessor(text):
 filepath="c:\BhaskarCode\FILES\TextMining\Docs"
 os.path.normpath(filepath)                             #Neutralize OS effect of path
 corpus =[]                                              #Initiate list to create corpus to pass to vectorizer
+lengthCheck = []                                        # track how many words are removed
 for file in os.listdir(filepath):                       #loop through all files in the folder
     fullfilepath=os.path.join(filepath,file)
     if os.path.isfile(fullfilepath):
@@ -31,12 +56,18 @@ for file in os.listdir(filepath):                       #loop through all files 
         data = ''
         for para in doc.paragraphs:
             data = data + ' ' + para.text
+
+        preLen= len(data.split())
         data = myTextPreProcessor(data)
+        postLen =len(data)
+        lengthCheck.append([preLen, postLen])
         print(data)
         data = ' '.join(data)                       #converting list back to string to add to a master list
         corpus.append(data)                         #add whole string into master list to be passed to vector
     else:
         continue
+
+print(lengthCheck)
 
 #Pass the corpus list as argument to TFIDFVectorizer & store result in data frame & write to excel
 vectorizer = TfidfVectorizer()
@@ -45,8 +76,8 @@ vectors = vectorizer.fit_transform(corpus)
 df = pd.DataFrame(vectors.T.todense(), index=vectorizer.get_feature_names())    #T to transpose column & row
 df['calc']=df[0]*df[1]
 df.sort_values("calc", axis=0,ascending=False,inplace=True,kind="quicksort")
-dfwrite=pd.ExcelWriter("c:\BhaskarCode\FILES\TextMining\TFIDF-COSINE\TFIDF.xlsx")
-df.to_excel(dfwrite,sheet_name='TFIDF', index=True)
+dfwrite=pd.ExcelWriter("c:\BhaskarCode\FILES\TextMining\TFIDF-COSINE\TFIDF3.xlsx")
+df.to_excel(dfwrite,sheet_name='TFIDF3', index=True)
 dfwrite.save()
 #df=df.head(5)
 print(df)

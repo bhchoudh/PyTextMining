@@ -1,0 +1,48 @@
+import nltk, os, os.path
+import pandas as pd
+from clsBhasTextMine import clsBhasTextMine
+from nltk.stem import PorterStemmer
+from nltk.stem import LancasterStemmer
+from textblob import TextBlob
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from docx import Document
+from openpyxl import load_workbook
+
+excelpath = "d:\BhaskarCode\FILES\TextMining21\myNaiveBayes0521.xlsx"
+filepath = "d:\BhaskarCode\FILES\TextMining21\dataNBtrain"
+#nltk.download('averaged_perceptron_tagger')
+
+def myModelClassify(filepath,excelpath):      #only to create a excel of classification model by reading DocX
+    os.path.normpath(filepath)  # Neutralize OS effect of path
+    os.path.normpath(excelpath)
+    newdatalist = []
+    txtpreproc = clsBhasTextMine()
+    for file in os.listdir(filepath):  # loop through all files in the folder
+        fullfilepath = os.path.join(filepath, file)
+        if os.path.isfile(fullfilepath):
+            data = txtpreproc.myReadDocx(fullfilepath)
+            data = txtpreproc.myTextPreProcessor(data)
+            data = ' '.join(data)  # converting list back to string to add to a master list
+            if (len(file) % 2) == 0:
+                label = 'High'
+            else:
+                label = 'Low'
+            newdata = [data, label]
+            newdatalist.append(newdata)
+        else:
+            continue
+
+    # print(*newdatalist, sep = "\n")
+    dfClassifier = pd.DataFrame(newdatalist, columns=['Text', 'Label'])
+    dfwrite = pd.ExcelWriter(excelpath)
+    dfClassifier.to_excel(dfwrite, sheet_name='RefData', index=True)
+    dfwrite.save()
+    return newdatalist
+
+#Used only to create first set of Vector data excel
+if not os.path.isfile(excelpath):
+    print("No excel File with Training data - Creating a new ")
+    result = myModelClassify(filepath, excelpath)

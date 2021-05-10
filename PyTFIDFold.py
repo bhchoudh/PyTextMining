@@ -1,9 +1,18 @@
 import nltk
+from clsBhasTextMine import clsBhasTextMine
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-#nltk.download('punkt')
-#nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('stopwords')
+
+refdata = "10 + years experience, with 2+ years in Telecom industry Excellent communication & presentation skill & customer facing experience Containers – Dockers, Kubernetes & Helm Software Development Python CICD/ DevOps / Automation - Jenkins , Ansible, Puppet  etc Consulting, presales & E2E architecting experience Opensource forum upstream contribution Ability to lead multi location virtual teams in matrix set up Excellent communication skill & customer facing experience Deployment experience in OpenStack integration with Juniper Contrail SDN Installing, configuring and troubleshooting various OpenStack services using FUEL GUI and CLI Linux system administration experience Containers Dockers, Kubernetes & Helm Openstack Deployment & system integration experience"
+print(refdata)
+txtpreproc = clsBhasTextMine()
+refdata = txtpreproc.myTextPreProcessor(refdata)
+print(refdata)
+
+quit()
 
 filepath1= "c:\BhaskarCode\FILES\TextMining\TextMining1.txt"
 filepath2= "c:\BhaskarCode\FILES\TextMining\TextMining2.txt"
